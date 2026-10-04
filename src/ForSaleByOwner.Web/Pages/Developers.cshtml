@@ -1,0 +1,80 @@
+@page "/developers"
+@{
+    ViewData["Title"] = "Bring your own AI · Texas real estate API & MCP tools";
+    ViewData["Description"] = "Bring your own AI to your Texas home sale. Explore planned real estate API and MCP tools for seller workflows, document guidance, and free listing discovery. Usage-based access is in development.";
+}
+@section Head {
+<link rel="alternate" type="text/plain" href="/llms.txt" title="AI-readable product overview" />
+<link rel="alternate" type="application/json" href="/agent-capabilities.json" title="Planned agent capabilities" />
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "WebPage",
+  "name": "Bring your own AI: Texas real estate API and MCP tools",
+  "description": "Preview of planned paid seller workflow tools and free public listing discovery for connected AI assistants. No live API, MCP service, or payment gateway is available yet.",
+  "inLanguage": "en-US",
+  "about": ["Texas for sale by owner", "Real estate API", "Model Context Protocol", "AI seller assistance"],
+  "isAccessibleForFree": true
+}
+</script>
+}
+<section class="section-wrap ai-hero">
+    <div><p class="eyebrow">BRING YOUR OWN AI / BUILT FOR AGENT BUILDERS</p>
+        <h1>Your favorite AI's<br /><em>favorite real estate tool.</em></h1>
+        <p class="hero-description">Keep the assistant you love. Give it the Texas home-selling knowledge, document workflows, and property context it needs to help you move forward.</p>
+        <div class="actions"><a class="button" href="#capabilities">Explore the tools ↘</a><a class="text-link" href="/llms.txt">Read the AI brief →</a></div>
+        <p class="fine-print">Product preview · API, MCP, and usage-based billing are in development.</p>
+    </div>
+    <aside class="agent-flow panel" aria-label="How the planned integration works">
+        <p class="eyebrow">YOUR ASSISTANT. OUR SPECIALTY.</p>
+        <div class="flow-node"><span>01</span><div><strong>Your AI assistant</strong><small>Your conversation. Your preferred interface.</small></div></div>
+        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-node flow-featured"><span>✳</span><div><strong>For Sale By Owner tools</strong><small>Property context · Texas guidance · Sale workflows</small></div></div>
+        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-node"><span>03</span><div><strong>A useful next step</strong><small>A sourced answer, a clear checklist, a reviewed draft.</small></div></div>
+        <p class="fine-print">Designed for assistants such as ChatGPT and Claude, and custom agents. Support will depend on the client. No integrations are live or endorsed by those providers.</p>
+    </aside>
+</section>
+<section class="feature-band" id="capabilities"><div class="section-wrap">
+    <div class="section-heading"><div><p class="eyebrow">TEXAS REAL ESTATE API & MCP TOOLS</p><h2>A specialist your<br />assistant can call.</h2></div><p>Clear inputs. Structured results.<br />Source references you can follow.</p></div>
+    <div class="three-grid capability-grid">
+        <article class="panel"><span class="pill">PLANNED · PAID SELLER TOOL</span><h3>Build a selling plan</h3><p>Turn seller-confirmed property facts into a staged Texas FSBO checklist, with missing information called out explicitly.</p><code>create_selling_plan</code></article>
+        <article class="panel"><span class="pill">PLANNED · PAID SELLER TOOL</span><h3>Understand the documents</h3><p>Retrieve guidance with official sources, applicability criteria, recipient details, and timing.</p><code>get_document_guidance</code></article>
+        <article class="panel"><span class="pill">PLANNED · PAID SELLER TOOL</span><h3>Prepare a listing draft</h3><p>Draft a property description from confirmed facts and return it to the seller's workspace for review.</p><code>draft_listing</code></article>
+    </div>
+    <div class="discovery-callout"><div><span class="pill">PLANNED · FREE DISCOVERY</span><h3>Finding a home should stay open.</h3><p>Search seller-approved public listings by city, price, and bedrooms. Retrieve listing details and published photos through the same discovery service.</p><code>search_listings · get_listing</code></div><a class="text-link" href="/homes">Browse sample homes →</a></div>
+</div></section>
+<section class="section-wrap section-space two-grid ai-pricing">
+    <div><p class="eyebrow">TWO WAYS TO WORK WITH US</p><h2>Your portal.<br />Or your own AI.</h2><p>Our seller package brings the guide and workspace together. The planned agent-tool offering lets you access our expertise from another assistant, with usage-based pricing.</p><p>We charge for the assistance: organizing the sale, explaining supported requirements, and preparing useful work. Official government forms remain free.</p></div>
+    <div class="panel"><h3>Pay for useful work.</h3><p>For developers, we're exploring metered access to seller workflow tools, with a quoted cost and spending controls before a paid operation.</p><ul class="feature-list"><li>Public listing discovery stays free</li><li>Seller assistance is the paid capability</li><li>Explicit workspace permission for private data</li><li>Seller approval before any external action</li></ul><p class="fine-print">Rates and billing units are not yet set. The illustrative $299 portal package is a separate offer; API usage is not currently included or sold.</p></div>
+</section>
+<section class="section-wrap integration-section" id="integration">
+    <p class="eyebrow">MACHINE-READABLE BY DESIGN</p><h2>Clear contracts.<br />No guessing at a webpage.</h2>
+    <p>Planned REST endpoints and Model Context Protocol (MCP) tools will expose structured results. Documentation and capability discovery will be public; private workspace operations will require seller authorization.</p>
+    <div class="two-grid"><article><h3>Read-only listing discovery</h3><pre><code># Proposed routes — not live
+GET /api/v1/listings?city=Houston&amp;maxPrice=500000
+GET /api/v1/listings/{id}
+
+# Proposed MCP tools — not callable yet
+search_listings(city, maxPrice, minBeds, cursor)
+get_listing(id)</code></pre></article><article><h3>Seller assistance</h3><pre><code># Illustrative capability result
+{
+  "capability": "get_document_guidance",
+  "availability": "planned",
+  "access": "seller_authorized",
+  "billing": "usage_based_planned",
+  "outputs": [
+    "guidance", "source_references",
+    "missing_facts", "next_steps"
+  ]
+}</code></pre></article></div>
+    <div class="panel"><h3>A path to agent-native payments</h3><p>Cloudflare's Monetization Gateway applies x402 payment requirements to selected requests. We are evaluating that model for paid seller tools: discover a capability, see the price, authorize payment, and receive the result.</p><p>This is an architectural direction, not a connected gateway. Payment would grant access to a paid operation; it would never replace the seller's authorization to access documents, sign, or submit anything.</p><a class="text-link" href="https://developers.cloudflare.com/monetization-gateway/" target="_blank" rel="noopener noreferrer">Read Cloudflare's gateway documentation ↗</a></div>
+    <div class="actions documentation-links"><a class="button secondary" href="/agent-capabilities.json">Read the capability manifest ↗</a><a class="text-link" href="/llms.txt">Read llms.txt →</a></div>
+</section>
+<section class="section-wrap faq-section"><p class="eyebrow">FOR PEOPLE & THE AGENTS THEY BUILD</p><h2>Before you connect.</h2>
+    <details><summary>Can I connect ChatGPT or Claude today?</summary><p>Not yet. This page describes the planned integration. Today you can explore the seller demo, fictional listings, and machine-readable capability preview.</p></details>
+    <details><summary>What will a paid agent call provide?</summary><p>The planned tools return a selling plan, source-linked document guidance, or a listing draft based on supplied and confirmed facts. Pricing, quotas, and production service guarantees will be published before launch.</p></details>
+    <details><summary>Can another agent read my private documents?</summary><p>Only with the seller's explicit permission in the future authenticated service. Public listing discovery will not expose private documents, conversations, signatures, or negotiation preferences.</p></details>
+    <details><summary>Where should crawlers and agent builders start?</summary><p>Read this page for the product offering, <a class="text-link" href="/llms.txt">llms.txt</a> for a concise overview, and <a class="text-link" href="/agent-capabilities.json">the capability manifest</a> for explicit availability and access boundaries. These files are documentation, not a working MCP endpoint.</p></details>
+</section>
+<section class="closing-cta"><p class="eyebrow">BRING THE CONVERSATION. ADD THE EXPERTISE.</p><h2>A better-equipped AI.<br />A better-prepared seller.</h2><a class="button" href="/app">Explore the seller experience ↗</a></section>

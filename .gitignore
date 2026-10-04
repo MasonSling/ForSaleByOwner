@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+node_modules/
+.build/
+artifacts/
+*.user
+.vs/
+src/ForSaleByOwner.Web/wwwroot/css/site.css
+src/ForSaleByOwner.Web/wwwroot/vendor/

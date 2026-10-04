@@ -1,0 +1,37 @@
+# For Sale By Owner — Texas seller assistance for your AI
+
+> Bring your own AI. Planned real estate API and Model Context Protocol (MCP) tools for Texas home sellers, plus free public listing discovery.
+
+## Availability
+
+This is a visual concept. The website demo and these documentation files are available. Listings are fictional. REST APIs, MCP tools, authentication, live AI, signing, submissions, and billing are not live. The proposed tools are not callable integrations.
+
+## Product
+
+- [Bring your own AI](/developers): Capabilities, proposed usage-based seller tooling, access boundaries, and payment direction.
+- [Seller demo](/app): Simulated workspace, not real property or private customer data.
+- [Sample homes](/homes): Fictional listings, not available housing inventory.
+- [Capability manifest](/agent-capabilities.json): Custom documentation manifest, not an MCP or OpenAPI specification.
+
+## Planned paid tools
+
+- create_selling_plan: Seller-confirmed property facts to a Texas FSBO checklist and missing-information prompts.
+- get_document_guidance: Source-linked guidance, applicability criteria, recipients, and timing.
+- draft_listing: Confirmed property facts to an editable draft for seller review.
+
+Private operations will require seller authorization. Pricing and billing units are undecided. The usage-based tool offering is separate from the illustrative $299, 12-month portal package.
+
+## Planned free tools
+
+- search_listings: Filter approved public listings by location, price, and bedrooms, with pagination.
+- get_listing: Retrieve approved facts, published photos, availability, and a canonical property URL.
+
+Proposed REST routes: GET /api/v1/listings and GET /api/v1/listings/{id}. These routes are not live.
+
+## Payment direction
+
+Usage-based seller tools may use HTTP 402 / x402. Cloudflare Monetization Gateway is being evaluated, not integrated. There is no payment endpoint, wallet, quoted rate, or service guarantee today. Payment does not authorize access to a private workspace or external signing/submission actions.
+
+## Boundaries
+
+Texas single-family resale is the initial scope. Official government forms are free. Private documents, conversations, signatures, and negotiation preferences are excluded from public discovery. Production legal guidance and integrations require further review. No affiliation with OpenAI, Anthropic, or Cloudflare is claimed.

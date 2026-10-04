@@ -1,0 +1,9 @@
+@model ForSaleByOwner.Web.Pages.App.PrepareModel
+@using ForSaleByOwner.BLL
+<div class="journey-photo-grid">
+@foreach(var photo in Model.Journey.Photos) {
+    <article class="panel journey-photo @(photo.Included?"":"photo-excluded")"><img src="@photo.Path" alt="@photo.Caption" /><span class="pill">@(JourneyService.Value(Model.Journey,"cover")==photo.Id?"COVER PHOTO":photo.Included?"INCLUDED":"EXCLUDED")</span>
+    <form method="post" asp-page-handler="Photo"><input type="hidden" name="Revision" value="@Model.Journey.Revision" /><input type="hidden" name="id" value="@photo.Id" /><label for="caption-@photo.Id">Public caption</label><input id="caption-@photo.Id" name="caption" value="@photo.Caption" maxlength="160" /><div class="photo-actions"><button name="operation" value="caption">Save caption</button><button name="operation" value="cover" disabled="@(!photo.Included)">Make cover</button><button name="operation" value="earlier" aria-label="Move @photo.Caption earlier">← Earlier</button><button name="operation" value="later" aria-label="Move @photo.Caption later">Later →</button><button name="operation" value="toggle">@(photo.Included?"Exclude":"Include")</button></div></form></article>
+}
+</div>
+<section class="panel local-preview" x-data="photos"><h3>Preview your own photos</h3><p>Up to six JPG, PNG, or WebP images under 10 MB each. Local previews are not saved, analyzed, uploaded, or added to the published demo.</p><label for="journey-photos">Choose local images</label><input id="journey-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple x-on:change="preview" /><p x-text="error" role="alert"></p><div class="photo-grid three-grid"><template x-for="photo in previews"><figure><img x-bind:src="photo.url" x-bind:alt="photo.name" /><figcaption x-text="photo.name"></figcaption></figure></template></div></section>

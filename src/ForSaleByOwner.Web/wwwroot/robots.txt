@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /developers
+Allow: /llms.txt
+Allow: /agent-capabilities.json
+Disallow: /app
+Disallow: /start

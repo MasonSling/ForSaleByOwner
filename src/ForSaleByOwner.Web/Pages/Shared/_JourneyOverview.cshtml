@@ -1,0 +1,26 @@
+@model ForSaleByOwner.BLL.JourneyState
+@using ForSaleByOwner.BLL
+@{ var blockers=JourneyService.Blockers(Model);var next=JourneyDefinition.Step(Model.LastSection,Model.LastStep);var complete=JourneyDefinition.Sections.Count(s=>JourneyService.State(Model,s.Id)=="Complete");var prep=JourneyService.PreparationKeys(Model).ToList(); }
+<div class="journey-overview">
+    <div class="overview-welcome"><p class="eyebrow">YOUR NEXT CHAPTER, ONE STEP AT A TIME</p><h1>A clear path to<br /><em>your next chapter.</em></h1><p>Your work is right here. Pick up where you left off, or revisit any section.</p></div>
+    <article class="resume-card"><div><span class="pill">CONTINUE WHERE YOU LEFT OFF</span><h2>@next.Title</h2><p>@JourneyDefinition.Section(Model.LastSection).Title · @complete of 6 sections complete</p></div><a class="button" href="@JourneyDefinition.Path(Model.LastSection,Model.LastStep)">Continue my plan →</a></article>
+    <div class="two-grid readiness-tracks">
+        <article class="panel"><p class="eyebrow">LISTING READINESS</p><h3>@(blockers.Count==0?"Ready for final review":$"{blockers.Count} listing items to finish")</h3><p>Your confirmed public facts, photos, description, and contact choices.</p><a class="text-link" href="/app/prepare/review/check">Review my listing →</a></article>
+        <article class="panel"><p class="eyebrow">SALE PREPARATION</p><h3>@prep.Count(k=>JourneyService.Confirmed(Model,k)) of @prep.Count preparation steps reviewed</h3><p>@JourneyService.PendingFindings(Model) document findings need attention. Signing, delivery, and closing are separate milestones.</p><a class="text-link" href="/app/prepare/documents/requirements">See preparation steps →</a></article>
+    </div>
+    <div class="overview-section-grid">@foreach(var section in JourneyDefinition.Sections) {
+        var state=JourneyService.State(Model,section.Id);
+        <a class="overview-section-card" href="@JourneyDefinition.Path(section.Id,section.Steps[0].Id)"><div><span class="pill">@state</span><h3>@(section.Title)</h3><p>@(section.Description)</p></div><span aria-hidden="true">↗</span></a>
+    }</div>
+    @if(Model.Answers.Any(a=>a.Value.Status is "Unknown" or "Needs confirmation") || JourneyService.PendingFindings(Model)>0 || Model.Documents.Any(d=>d.Status is "Unreadable" or "Wrong property")) {
+        <section class="panel followup-list"><h3>A few things to come back to.</h3>
+        @foreach(var answer in Model.Answers.Where(a=>a.Value.Status is "Unknown" or "Needs confirmation").Take(12)) { <p><span class="pill">@answer.Value.Status</span> @JourneyService.Label(answer.Key)</p> }
+        @foreach(var doc in Model.Documents.Where(d=>d.Status is not "Reviewed" and not "Superseded")) { <p><a href="/app/prepare/documents/records?document=@doc.Id">@doc.Filename · @doc.Status →</a></p> }
+        </section>
+    }
+    @if(Model.Publication is {} published) {
+        <section class="panel published-summary"><span class="pill">PUBLISHED DEMO SNAPSHOT · REVISION @published.Revision</span><h3>@published.Facts.GetValueOrDefault("address")</h3><p>@published.Description</p><p>Asking price: @published.Facts.GetValueOrDefault("price") · @published.Photos.Count approved photos</p><p class="fine-print">This snapshot stays unchanged while you edit. Approve a new version explicitly to replace it. No real listing was distributed.</p><a class="text-link" href="/app/prepare/review/check">Review an update →</a></section>
+    }
+    <div class="later-stages"><p class="eyebrow">WHEN YOU'RE READY FOR WHAT'S NEXT</p><a href="/app/offers">Compare offers →</a><a href="/app/closing">Contract, signing & closing →</a></div>
+</div>
+

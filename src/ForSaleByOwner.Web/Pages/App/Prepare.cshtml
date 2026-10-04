@@ -1,0 +1,66 @@
+@page "/app/prepare/{section}/{step}"
+@model ForSaleByOwner.Web.Pages.App.PrepareModel
+@using ForSaleByOwner.BLL
+@{ ViewData["Title"] = Model.CurrentSection.Title + " · Prepare my listing"; var j=Model.Journey; }
+<div class="demo-banner">YOUR LISTING JOURNEY <span>Fictional samples · Simulated assistance · Session-only progress</span><a href="/app">My overview ↗</a></div>
+<div class="journey-layout" hx-history="false" x-data="journeyGuide">
+    <aside class="journey-nav">
+        <a class="text-link" href="/app">← My selling space</a>
+        <p class="eyebrow">PREPARE MY LISTING</p>
+        <nav aria-label="Listing preparation sections">
+        @for(var i=0;i<JourneyDefinition.Sections.Length;i++) {
+            var section=JourneyDefinition.Sections[i]; var state=JourneyService.State(j,section.Id);
+            <a class="journey-nav-item @(section.Id==Model.Section?"current":"")" href="@JourneyDefinition.Path(section.Id,section.Steps[0].Id)" aria-current="@(section.Id==Model.Section?"step":null)"><span class="journey-number">@(state=="Complete"?"✓":(i+1).ToString("00"))</span><span><strong>@(section.Title)</strong><small class="state-@state.Replace(" ","-").ToLowerInvariant()">@state</small></span></a>
+        }
+        </nav>
+        <div class="journey-nav-note"><span class="spark">✳</span><p>Small steps. A clear path.<br />Your answers are saved after you submit a step.</p><small>This demo resets when the app restarts. Use sample information only.</small></div>
+    </aside>
+    <section class="journey-task">
+        <div class="journey-breadcrumb"><span>@Model.CurrentSection.Title</span><span>Step @(Array.FindIndex(Model.CurrentSection.Steps,s=>s.Id==Model.Step)+1) of @Model.CurrentSection.Steps.Length</span></div>
+        <h1>@Model.CurrentStep.Title</h1><p class="journey-intro">@Model.CurrentStep.Intro</p>
+        @if(Model.Notice is not null) { <div class="notice" role="status">@Model.Notice</div> }
+        @if(Model.Error is not null) { <div class="validation notice" role="alert">@Model.Error <a class="text-link" href="@Model.StepPath">Reload the saved step →</a></div> }
+        @if(Model.Step=="records") { <partial name="_JourneyDocuments" model="Model" /> }
+        @if(Model.Step=="photos") { <partial name="_JourneyPhotos" model="Model" /> }
+        @if(Model.Section=="review") { <partial name="_JourneyPreview" model="j" /> }
+        <form method="post" asp-page-handler="Save" class="journey-answer-form" id="journey-answers">
+            <input type="hidden" asp-for="Revision" />
+            @foreach(var field in Model.CurrentStep.Fields) {
+                var answer=j.Answers.GetValueOrDefault(field.Key);
+                <div class="answer-card">
+                    <div class="answer-label"><label for="answer-@field.Key">@field.Label</label><span class="field-visibility">@(field.Public?"Public listing":"Private workspace")</span></div>
+                    <p class="field-hint" id="hint-@field.Key">@field.Hint</p>
+                    @if(field.Kind=="select") {
+                        <select id="answer-@field.Key" name="Answers[@field.Key]" aria-describedby="hint-@field.Key"><option value="">I don't know yet</option>@foreach(var option in field.Options!) { <option value="@option" selected="@(Model.GetValue(field.Key)==option)">@option</option> }</select>
+                    } else if(field.Kind=="textarea") {
+                        <textarea id="answer-@field.Key" name="Answers[@field.Key]" rows="@(field.Key=="description"?8:3)" maxlength="4000" aria-describedby="hint-@field.Key">@Model.GetValue(field.Key)</textarea>
+                    } else {
+                        <input id="answer-@field.Key" name="Answers[@field.Key]" type="@field.Kind" step="@(field.Key=="baths"?"0.5":"1")" value="@Model.GetValue(field.Key)" maxlength="160" aria-describedby="hint-@field.Key" />
+                    }
+                    <div class="answer-provenance"><span>@(answer?.Status??"Not answered")</span>@if(answer is not null) { <span>@answer.Source @if(answer.Page is not null) { <text>· page @answer.Page</text> }</span> }</div>
+                    @if(field.Kind!="select") { <button type="button" class="unknown-answer" data-clear-field="answer-@field.Key">I don't know yet</button> }
+                </div>
+            }
+            @if(Model.Step=="description") {
+                <label class="consent-card"><input type="checkbox" name="Answers[approveDescription]" value="yes" checked="@JourneyService.Confirmed(j,"descriptionApproved")" /><span>I have reviewed the description and approve it for my public listing.</span></label>
+                <p class="fine-print">Ask your guide to draft from confirmed facts. Accepting a proposed draft does not approve it for publication.</p>
+            }
+            @if(Model.Step=="records") { <div class="review-note"><strong>@JourneyService.PendingFindings(j) findings still need attention</strong><p>You can continue while gathering documents. Pending findings remain on your overview.</p></div> }
+            @if(Model.Step=="requirements") { <partial name="_JourneyRequirements" model="Model" /> }
+            @if(Model.Step=="photos") { <div class="review-note">Continue to confirm your current image selection. Include at least one photo and select a cover first.</div> }
+            @if(Model.Step=="check") {
+                var blockers=JourneyService.Blockers(j);
+                <div class="review-note"><strong>@(blockers.Count==0?"Your listing prerequisites are ready.":$"{blockers.Count} things to finish before publishing.")</strong><ul>@foreach(var item in blockers) { <li>@item</li> }</ul><p>Continuing records final review only when listing prerequisites are complete. Document preparation has its own milestones.</p></div>
+            }
+            <div class="journey-controls"><button name="intent" value="back" class="button secondary" formnovalidate>← Back</button><button name="intent" value="continue" class="button">Save & continue →</button></div>
+            <div class="journey-secondary-controls"><button name="intent" value="exit" formnovalidate>Save & exit</button>@if(Model.Section!="review") { <button name="intent" value="later" formnovalidate>Do this later</button> }</div>
+        </form>
+        @if(Model.Step=="publish") {
+            <form method="post" asp-page-handler="Publish" class="publication-approval panel"><input type="hidden" name="Revision" value="@j.Revision" /><label class="consent-card"><input type="checkbox" name="approved" value="true" required /><span>I approve this exact public listing draft and its selected photos and contact details.</span></label><button class="button" disabled="@(JourneyService.Blockers(j).Count>0||!JourneyService.Confirmed(j,"finalReview"))">@(j.Publication is null?"Publish demo listing":"Approve updated demo listing") ↗</button><p class="fine-print">A demo snapshot only. No MLS distribution, external delivery, signatures, or charges.</p></form>
+        }
+        <details class="journey-history"><summary>Your recent saved decisions</summary>@foreach(var item in j.History.TakeLast(8).Reverse()) { <p><strong>@JourneyService.Label(item.Subject)</strong><br /><small>@item.Before → @item.After<br />@item.Reason</small></p> }@if(j.History.Count==0) { <p>Your confirmed answers and document decisions will appear here.</p> }</details>
+    </section>
+    <button type="button" class="guide-mobile-button" x-on:click="openGuide" aria-controls="context-guide" x-bind:aria-expanded="open">✳ Ask your guide</button>
+    <aside id="context-guide" class="journey-guide" x-bind:class="guideClass"><button type="button" class="guide-close" x-on:click="closeGuide">Close guide ×</button><partial name="_JourneyAgent" model="Model" /></aside>
+</div>
+

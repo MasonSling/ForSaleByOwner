@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\ForSaleByOwner.BLL\ForSaleByOwner.BLL.csproj" />
+    <ProjectReference Include="..\ForSaleByOwner.DAL\ForSaleByOwner.DAL.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\site.css;wwwroot\vendor\**" />
+    <Content Include="wwwroot\css\site.css;wwwroot\vendor\alpine.min.js;wwwroot\vendor\htmx.min.js" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="BuildFrontend" BeforeTargets="BeforeBuild" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/../.." Command="npm ci --no-audit --no-fund" Condition="!Exists('$(MSBuildProjectDirectory)/../../node_modules/.package-lock.json')" />
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/../.." Command="npm run build" />
+  </Target>
+</Project>

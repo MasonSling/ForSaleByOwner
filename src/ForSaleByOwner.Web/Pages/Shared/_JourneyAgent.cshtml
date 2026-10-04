@@ -1,0 +1,20 @@
+@model ForSaleByOwner.Web.Pages.App.PrepareModel
+@using ForSaleByOwner.BLL
+<section id="journey-agent-panel" class="panel agent-panel">
+    <div class="guide-heading"><span class="spark">✳</span><div><strong>Your selling guide</strong><small>HERE FOR THIS NEXT STEP</small></div></div>
+    <p class="agent-context">Helping with: <strong>@Model.CurrentSection.Title</strong></p>
+    <div class="conversation" role="log" aria-live="polite">
+        <div class="chat-bubble"><p>We're at “@Model.CurrentStep.Title” Ask me to explain it, or help with what's missing.</p></div>
+        @foreach(var message in Model.Journey.Conversations.GetValueOrDefault(Model.Section,[])) { <div class="chat-bubble @(message.Role=="seller"?"seller":"")"><small>@(message.Role=="seller"?"You":"Your guide")</small><p>@message.Text</p></div> }
+    </div>
+    @if(Model.Error is not null) { <p role="alert">@Model.Error</p> }
+    @foreach(var proposal in Model.Journey.Proposals.Where(p=>p.Section==Model.Section&&p.Status=="Needs confirmation")) {
+        <article class="agent-proposal"><span class="pill">PROPOSED · NOT SAVED</span><p>@proposal.Value</p><small>@proposal.Explanation</small>
+        @if(proposal.BasedOnRevision!=Model.Journey.Revision) { <p class="fine-print">Your context changed. Request a fresh draft.</p> }
+        else { <form method="post" action="@Model.StepPath?handler=Accept">@Html.AntiForgeryToken()<input type="hidden" name="Revision" value="@Model.Journey.Revision" /><button class="button secondary" name="proposal" value="@proposal.Id">Accept into draft</button></form> }
+        </article>
+    }
+    <form method="post" action="@Model.StepPath?handler=Ask" hx-post="@Model.StepPath?handler=Ask" hx-target="#journey-agent-panel" hx-swap="outerHTML" hx-disabled-elt="find button" class="suggestions">@Html.AntiForgeryToken()<button name="prompt" value="@(Model.Section=="presentation"?"Draft my listing":"Explain this step")">@(Model.Section=="presentation"?"Draft from my confirmed facts ↗":"Help me with this step ↗")</button></form>
+    <form method="post" action="@Model.StepPath?handler=Ask" hx-post="@Model.StepPath?handler=Ask" hx-target="#journey-agent-panel" hx-swap="outerHTML" hx-disabled-elt="find button" class="chat-form">@Html.AntiForgeryToken()<label class="sr-only" for="context-prompt">Ask about this section</label><input id="context-prompt" name="prompt" placeholder="Ask about this step…" maxlength="1000" required /><button aria-label="Send section question">↑</button></form>
+    <p class="fine-print">Simulated guidance, not legal advice. Asking won't change your answers. Save this step before accepting a proposal.</p>
+</section>

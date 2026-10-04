@@ -1,0 +1,14 @@
+@model ForSaleByOwner.BLL.JourneyState
+@using ForSaleByOwner.BLL
+@{ var cover=Model.Photos.FirstOrDefault(p=>p.Id==JourneyService.Value(Model,"cover")&&p.Included); }
+<article class="panel public-listing-preview" aria-label="Public listing draft">
+    <span class="pill">PUBLIC DRAFT · NOT THE PUBLISHED SNAPSHOT</span>
+    @if(cover is not null) { <img class="preview-cover" src="@cover.Path" alt="@cover.Caption" /> } else { <div class="missing-cover">Choose your cover photo in Photos & presentation.</div> }
+    <div class="preview-title"><h2>@JourneyService.Value(Model,"address")</h2><strong>@(decimal.TryParse(JourneyService.Value(Model,"price"),out var price)?price.ToString("C0",System.Globalization.CultureInfo.GetCultureInfo("en-US")):"Price not confirmed")</strong></div>
+    <p>@JourneyService.Value(Model,"city"), Texas</p>
+    <div class="home-facts"><span>@JourneyService.Value(Model,"beds") beds</span><span>@JourneyService.Value(Model,"baths") baths</span><span>@JourneyService.Value(Model,"size") sq ft</span><span>Built @JourneyService.Value(Model,"year")</span></div>
+    <p class="preserve-lines">@JourneyService.Value(Model,"description")</p>
+    <div class="preview-thumbs">@foreach(var photo in Model.Photos.Where(p=>p.Included)) { <figure><img src="@photo.Path" alt="@photo.Caption" /><figcaption>@photo.Caption</figcaption></figure> }</div>
+    <dl><dt>Showings</dt><dd>@JourneyService.Value(Model,"showings")</dd><dt>Contact</dt><dd>@(JourneyService.Value(Model,"contactMethod")=="Display a sample email"?JourneyService.Value(Model,"contactEmail"):JourneyService.Value(Model,"contactMethod"))</dd></dl>
+    <p class="fine-print">No private notes, documents, conversations, or negotiation preferences are included. This fictional listing is not added to the public home catalog.</p>
+</article>

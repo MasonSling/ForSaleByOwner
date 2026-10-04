@@ -1,0 +1,21 @@
+{
+  "manifestVersion": "0.1",
+  "manifestType": "product-capability-preview",
+  "name": "For Sale By Owner",
+  "description": "Bring-your-own-AI tools for Texas home-selling assistance and public listing discovery.",
+  "availability": "preview_only",
+  "documentation": "/developers",
+  "aiOverview": "/llms.txt",
+  "liveIntegrationEndpoints": [],
+  "scope": { "state": "TX", "propertyType": "single_family_resale" },
+  "capabilities": [
+    { "name": "create_selling_plan", "status": "planned", "access": "seller_authorized", "billing": "usage_based_planned" },
+    { "name": "get_document_guidance", "status": "planned", "access": "seller_authorized", "billing": "usage_based_planned" },
+    { "name": "draft_listing", "status": "planned", "access": "seller_authorized", "billing": "usage_based_planned" },
+    { "name": "search_listings", "status": "planned", "access": "public", "billing": "free_planned" },
+    { "name": "get_listing", "status": "planned", "access": "public", "billing": "free_planned" }
+  ],
+  "payment": { "status": "not_implemented", "direction": "HTTP 402 / x402 under evaluation", "rates": null },
+  "privacy": { "publicDiscoveryExcludes": ["private_documents", "conversations", "signatures", "negotiation_preferences"] },
+  "sampleListingsAreFictional": true
+}

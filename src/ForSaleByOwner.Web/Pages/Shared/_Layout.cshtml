@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>@ViewData["Title"] · For Sale By Owner</title>
+<meta name="description" content="@(ViewData["Description"] ?? "Your personal guide to selling your Texas home. A clear plan, the right paperwork, and support at every step.")" />
+<meta property="og:title" content="@ViewData["Title"] · For Sale By Owner" />
+<meta property="og:description" content="@(ViewData["Description"] ?? "A clear plan for your Texas home sale.")" />
+<meta property="og:type" content="website" />
+@await RenderSectionAsync("Head", required: false)
+<meta name="htmx-config" content='{"allowEval":false,"allowScriptTags":false,"selfRequestsOnly":true,"historyCacheSize":0}' />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" /><link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<script src="~/vendor/htmx.min.js" defer></script><script src="~/js/site.js" defer></script><script src="~/vendor/alpine.min.js" defer></script>
+</head><body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" x-data="navigation"><a href="/" class="brand"><span class="brand-mark">⌂</span><span>for sale<span class="brand-light"> by owner</span><small>TEXAS, ON YOUR TERMS</small></span></a><button class="mobile-menu" x-on:click="toggle" x-bind:aria-expanded="open" aria-controls="main-nav">Menu</button><nav id="main-nav" class="main-nav" x-bind:class="menuClass" aria-label="Main navigation"><a href="/#how-it-works">How it works</a><a href="/homes">Find a home</a><a href="/#pricing">Pricing</a><a class="nav-dashboard" href="/app">Seller dashboard ↗</a></nav></header>
+<main id="main">@RenderBody()</main>
+<footer class="site-footer"><a class="brand" href="/">⌂ &nbsp;for sale by owner</a><p>A little guidance. A lot more confidence.</p><div><a href="/developers">Bring your own AI · For developers</a><span>Texas visual concept · Fictional properties</span></div></footer>
+<div id="request-error" class="request-error" role="alert" hidden>That request could not be completed. Please try again or refresh the page.</div>
+@await RenderSectionAsync("Scripts", required: false)
+</body></html>
